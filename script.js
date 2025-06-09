@@ -1,256 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Monitor</title>
-    <link rel="stylesheet" href="style.css">
-    
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Health Monitor</h1>
-            <p>Track your diabetes, blood pressure, and weight</p>
-        </header>
-        
-        <div class="dashboard">
-            <div class="stat-card">
-                <h3>Latest Glucose</h3>
-                <div class="stat-value" id="latest-glucose">--</div>
-                <div id="glucose-date">--</div>
-            </div>
-            <div class="stat-card">
-                <h3>Latest BP</h3>
-                <div class="stat-value" id="latest-bp">--</div>
-                <div id="bp-date">--</div>
-            </div>
-            <div class="stat-card">
-                <h3>Latest Weight</h3>
-                <div class="stat-value" id="latest-weight">--</div>
-                <div id="weight-date">--</div>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2>Add New Entry</h2>
-            <div class="form-group">
-                <label for="entry-type">Entry Type</label>
-                <select id="entry-type">
-                    <option value="glucose">Blood Glucose</option>
-                    <option value="bp">Blood Pressure</option>
-                    <option value="weight">Weight</option>
-                </select>
-            </div>
-            
-            <div id="glucose-form" class="entry-form">
-                <div class="form-group">
-                    <label for="glucose-value">Blood Glucose (mg/dL)</label>
-                    <input type="number" id="glucose-value" placeholder="Enter glucose reading">
-                </div>
-                <div class="form-group">
-                    <label for="glucose-time">Time</label>
-                    <select id="glucose-time">
-                        <option value="morning">Morning</option>
-                        <option value="evening">Evening</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div id="bp-form" class="entry-form" style="display: none;">
-                <div class="form-group">
-                    <label for="systolic">Systolic (mmHg)</label>
-                    <input type="number" id="systolic" placeholder="Enter systolic reading">
-                </div>
-                <div class="form-group">
-                    <label for="diastolic">Diastolic (mmHg)</label>
-                    <input type="number" id="diastolic" placeholder="Enter diastolic reading">
-                </div>
-            </div>
-            
-            <div id="weight-form" class="entry-form" style="display: none;">
-                <div class="form-group">
-                    <label for="weight-value">Weight (kg)</label>
-                    <input type="number" id="weight-value" step="0.1" placeholder="Enter weight">
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="notes">Notes (optional)</label>
-                <input type="text" id="notes" placeholder="Any additional notes">
-            </div>
-            
-            <button id="save-entry">Save Entry</button>
-        </div>
-        
-        <div class="tab-container">
-            <div class="tabs">
-                <div class="tab active" data-tab="all-entries">All Entries</div>
-                <div class="tab" data-tab="glucose-entries">Glucose</div>
-                <div class="tab" data-tab="bp-entries">Blood Pressure</div>
-                <div class="tab" data-tab="weight-entries">Weight</div>
-            </div>
-            
-            <div id="all-entries" class="tab-content active">
-                <table id="all-entries-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Reading</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody id="all-entries-body">
-                        <!-- Entries will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="glucose-entries" class="tab-content">
-                <table id="glucose-entries-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Reading (mg/dL)</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody id="glucose-entries-body">
-                        <!-- Entries will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="bp-entries" class="tab-content">
-                <table id="bp-entries-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Systolic/Diastolic</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bp-entries-body">
-                        <!-- Entries will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div id="weight-entries" class="tab-content">
-                <table id="weight-entries-table">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Weight (kg)</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody id="weight-entries-body">
-                        <!-- Entries will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        // Initialize the health monitoring app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Local storage keys
-            const GLUCOSE_DATA_KEY = 'healthMonitor_glucose';
-            const BP_DATA_KEY = 'healthMonitor_bp';
-            const WEIGHT_DATA_KEY = 'healthMonitor_weight';
+ // Initialize the health monitoring app
+document.addEventListener('DOMContentLoaded', function() {
+// Local storage keys
+const GLUCOSE_DATA_KEY = 'healthMonitor_glucose';
+const BP_DATA_KEY = 'healthMonitor_bp';
+const WEIGHT_DATA_KEY = 'healthMonitor_weight';
             
             // Get DOM elements
-            const entryTypeSelect = document.getElementById('entry-type');
-            const glucoseForm = document.getElementById('glucose-form');
-            const bpForm = document.getElementById('bp-form');
-            const weightForm = document.getElementById('weight-form');
-            const saveEntryBtn = document.getElementById('save-entry');
-            const tabs = document.querySelectorAll('.tab');
-            const tabContents = document.querySelectorAll('.tab-content');
+const entryTypeSelect = document.getElementById('entry-type');
+const glucoseForm = document.getElementById('glucose-form');
+const bpForm = document.getElementById('bp-form');
+const weightForm = document.getElementById('weight-form');
+const saveEntryBtn = document.getElementById('save-entry');
+const tabs = document.querySelectorAll('.tab');
+const tabContents = document.querySelectorAll('.tab-content');
             
             // Load existing data from localStorage
-            let glucoseData = JSON.parse(localStorage.getItem(GLUCOSE_DATA_KEY)) || [];
-            let bpData = JSON.parse(localStorage.getItem(BP_DATA_KEY)) || [];
-            let weightData = JSON.parse(localStorage.getItem(WEIGHT_DATA_KEY)) || [];
+let glucoseData = JSON.parse(localStorage.getItem(GLUCOSE_DATA_KEY)) || [];
+let bpData = JSON.parse(localStorage.getItem(BP_DATA_KEY)) || [];
+let weightData = JSON.parse(localStorage.getItem(WEIGHT_DATA_KEY)) || [];
             
-            // Update dashboard with latest readings
-            updateDashboard();
+// Update dashboard with latest readings
+updateDashboard();
             
-            // Display entries in tables
-            displayAllEntries();
-            displayGlucoseEntries();
-            displayBPEntries();
-            displayWeightEntries();
+// Display entries in tables
+displayAllEntries();
+displayGlucoseEntries();
+displayBPEntries();
+displayWeightEntries();
             
-            // Switch form based on selected entry type
-            entryTypeSelect.addEventListener('change', function() {
-                const selectedType = this.value;
+// Switch form based on selected entry type
+entryTypeSelect.addEventListener('change', function() {
+const selectedType = this.value;
                 
-                // Hide all forms first
-                glucoseForm.style.display = 'none';
-                bpForm.style.display = 'none';
-                weightForm.style.display = 'none';
+// Hide all forms first
+glucoseForm.style.display = 'none';
+bpForm.style.display = 'none';
+weightForm.style.display = 'none';
                 
                 // Show the selected form
-                if (selectedType === 'glucose') {
-                    glucoseForm.style.display = 'block';
-                } else if (selectedType === 'bp') {
-                    bpForm.style.display = 'block';
-                } else if (selectedType === 'weight') {
-                    weightForm.style.display = 'block';
-                }
+if (selectedType === 'glucose') {
+    glucoseForm.style.display = 'block';
+    } else if (selectedType === 'bp') {
+    bpForm.style.display = 'block';
+     } else if (selectedType === 'weight') {
+    weightForm.style.display = 'block';
+        }
+    });
+            
+ // Handle tab switching
+ tabs.forEach(tab => {
+   tab.addEventListener('click', function() {
+   // Remove active class from all tabs
+    tabs.forEach(t => t.classList.remove('active'));
+      
+        // Add active class to clicked tab
+        this.classList.add('active');
+                    
+        // Hide all tab contents
+        tabContents.forEach(content => content.classList.remove('active'));
+                    
+        // Show the selected tab content
+        const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+            });
             });
             
-            // Handle tab switching
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs
-                    tabs.forEach(t => t.classList.remove('active'));
-                    
-                    // Add active class to clicked tab
-                    this.classList.add('active');
-                    
-                    // Hide all tab contents
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    
-                    // Show the selected tab content
-                    const tabId = this.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-            
-            // Handle saving new entries
-            saveEntryBtn.addEventListener('click', function() {
-                const entryType = entryTypeSelect.value;
-                const notes = document.getElementById('notes').value;
-                const timestamp = new Date();
+// Handle saving new entries
+    saveEntryBtn.addEventListener('click', function() {
+    const entryType = entryTypeSelect.value;
+    const notes = document.getElementById('notes').value;
+    const timestamp = new Date();
                 
-                if (entryType === 'glucose') {
-                    const glucoseValue = document.getElementById('glucose-value').value;
-                    const glucoseTime = document.getElementById('glucose-time').value;
+    if (entryType === 'glucose') {
+        const glucoseValue = document.getElementById('glucose-value').value;
+        const glucoseTime = document.getElementById('glucose-time').value;
                     
-                    if (!glucoseValue) {
-                        alert('Please enter a glucose reading');
-                        return;
-                    }
+        if (!glucoseValue) {
+        alert('Please enter a glucose reading');
+        return;
+       }
                     
-                    const newGlucoseEntry = {
-                        value: parseFloat(glucoseValue),
-                        time: glucoseTime,
-                        notes: notes,
-                        date: timestamp
-                    };
+    const newGlucoseEntry = {
+        value: parseFloat(glucoseValue),
+        time: glucoseTime,
+        notes: notes,
+        date: timestamp
+        };
                     
-                    glucoseData.push(newGlucoseEntry);
-                    localStorage.setItem(GLUCOSE_DATA_KEY, JSON.stringify(glucoseData));
+    glucoseData.push(newGlucoseEntry);
+        localStorage.setItem(GLUCOSE_DATA_KEY, JSON.stringify(glucoseData));
                     
-                    // Reset form
-                    document.getElementById('glucose-value').value = '';
-                    document.getElementById('notes').value = '';
+        // Reset form
+        document.getElementById('glucose-value').value = '';
+        document.getElementById('notes').value = '';
                     
                 } else if (entryType === 'bp') {
                     const systolic = document.getElementById('systolic').value;
@@ -483,6 +326,3 @@
                 });
             }
         });
-    </script>
-</body>
-</html>
